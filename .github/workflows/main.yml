@@ -3,6 +3,7 @@ name: Create Tag
 on:
   push:
     branches:
+      - main
       - PROD
       - DEV
       - STAGING
@@ -33,6 +34,9 @@ jobs:
           TAG_PREFIX="v"
           PART="patch"
         elif [ "$CURRENT_BRANCH" == "STAGING" ]; then
+          TAG_PREFIX="v"
+          PART="patch"
+        elif [ "$CURRENT_BRANCH" == "main" ]; then
           TAG_PREFIX="v"
           PART="patch"
         fi

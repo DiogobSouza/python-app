@@ -1,9 +1,2 @@
-name: Test Workflow
-
-on: [push]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - run: echo "Workflow Executado!"
+- name: Auto tag
+  uses: Klemensas/action-autotag@1.2.3

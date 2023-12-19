@@ -1,0 +1,46 @@
+name: Auto Tagging
+
+on:
+  push:
+    branches:
+      - PROD
+      - DEV
+      - staging
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install Bump2Version
+      run: pip install bump2version
+    - name: Bump version and push tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        CURRENT_BRANCH="${GITHUB_REF##*/}"
+        TAG_PREFIX=""
+        PART=""
+
+        if [ "$CURRENT_BRANCH" == "PROD" ]; then
+          TAG_PREFIX="v"
+          PART="minor"
+        elif [ "$CURRENT_BRANCH" == "DEV" ]; then
+          TAG_PREFIX="v"
+          PART="patch"
+        elif [ "$CURRENT_BRANCH" == "staging" ]; then
+          TAG_PREFIX="v"
+          PART="patch"
+        fi
+
+        git fetch --tags
+        LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+
+        bump2version --current-version $LATEST_TAG --tag $TAG_PREFIX --commit --tag-name "{new_version}-$CURRENT_BRANCH" $PART
+        NEW_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+
+        git push origin $NEW_TAG

@@ -5,7 +5,7 @@ on:
     branches:
       - PROD
       - DEV
-      - staging
+      - STAGING
 
 jobs:
   tag:
@@ -32,7 +32,7 @@ jobs:
         elif [ "$CURRENT_BRANCH" == "DEV" ]; then
           TAG_PREFIX="v"
           PART="patch"
-        elif [ "$CURRENT_BRANCH" == "staging" ]; then
+        elif [ "$CURRENT_BRANCH" == "STAGING" ]; then
           TAG_PREFIX="v"
           PART="patch"
         fi

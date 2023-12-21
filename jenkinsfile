@@ -19,11 +19,25 @@ pipeline {
       }
     }
 
+    stage('Preparar Ambiente') {
+      steps {
+        echo "Preparando o ambiente"
+        // Instala o Python e o Pip (ajustar conforme o sistema operacional)
+        sh '''
+          sudo apt-get update
+          sudo apt-get install -y python3
+          sudo apt-get install -y python3-pip
+          pip3 --version
+        '''
+      }
+    }
+
     stage('Build') {
       steps {
         echo "Building"
         echo "Building version ${NEW_VERSION}"
-        sh 'pip install -r src/requirements.txt'
+        // Alterado para pip3 para garantir que estamos usando a versão do Python 3
+        sh 'pip3 install -r src/requirements.txt'
       }
     }
 
@@ -38,7 +52,7 @@ pipeline {
       steps {
         echo "Testando a aplicação"
         echo "Testado com sucesso !"
-        // sh 'python test.py'
+        // sh 'python3 test.py' // Alterado para python3
       } 
     }
 
